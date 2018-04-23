@@ -56,17 +56,19 @@ class App extends Component {
         }
 
         return (
-                <div>
+                <div id="posts">
                 <Header />
 
-                <button onClick={ this.switchOrder }>{ isChronological ? 'Top First': 'Newest First' }</button>
+                <div class="button"><button onClick={ this.switchOrder }>{ isChronological ? 'Top First': 'Newest First' }</button></div>
 
+                <ol class="posts">
                 { this.showPosts(isChronological).map(post =>
-                     <div id="post">
-                     <span id="title">{ post.data.title }</span> by <span id="author">{ post.data.author }</span>
-                     <div id="url"><a href={ post.data.url }>{ post.data.url }</a></div>
-                     </div>
+                     <li class="post">
+                     <span class="title">{ post.data.title }</span> by <span class="author">{ post.data.author }</span>
+                     <div class="url"><a href={ post.data.url }>{ post.data.url }</a></div>
+                     </li>
                 )}
+                </ol>
                 </div>
         );
     }
