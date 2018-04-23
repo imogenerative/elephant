@@ -1,4 +1,5 @@
 import React, { Component } from 'react';
+import Header from './header.js'
 import './App.css';
 
 const JSON = 'https://www.reddit.com/r/javascript/top/.json';
@@ -10,15 +11,18 @@ class App extends Component {
         this.state = {
             posts: [],
             isChronological: false,
+            isLoading: false,
         };
 
         this.switchOrder = this.switchOrder.bind(this);
     }
 
     componentDidMount() {
+        this.setState({ isLoading: true});
+
         fetch(JSON)
             .then(response => response.json())
-            .then(data => this.setState({ posts: data.data.children }));
+            .then(data => this.setState({ posts: data.data.children, isLoading: false }));
     }
 
     showPosts(isChronological) {
@@ -40,18 +44,26 @@ class App extends Component {
     }
 
     render() {
-        var { isChronological} = this.state
+        const { isChronological, isLoading } = this.state
+
+        if (isLoading) {
+            return (
+                    <div>
+                    <Header />
+                    <p>Loading JSON, please wait...</p>
+                    </div>
+            );
+        }
 
         return (
                 <div>
-
-                <h3>/r/javascript Top Posts</h3>
+                <Header />
 
                 <button onClick={ this.switchOrder }>{ isChronological ? 'Top First': 'Newest First' }</button>
 
                 { this.showPosts(isChronological).map(post =>
                      <div id="post">
-                     <div id="title">{ post.data.title }</div> by <span id="author">{ post.data.author }</span>
+                     <span id="title">{ post.data.title }</span> by <span id="author">{ post.data.author }</span>
                      <div id="url"><a href={ post.data.url }>{ post.data.url }</a></div>
                      </div>
                 )}
