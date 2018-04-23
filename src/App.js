@@ -9,8 +9,10 @@ class App extends Component {
 
         this.state = {
             posts: [],
-            isChronological: true,
+            isChronological: false,
         };
+
+        this.switchOrder = this.switchOrder.bind(this);
     }
 
     componentDidMount() {
@@ -31,18 +33,28 @@ class App extends Component {
         return posts;
     }
 
+    switchOrder() {
+        this.setState(prevState => ({
+            isChronological: !prevState.isChronological
+        }));
+    }
+
     render() {
-        const { isChronological } = this.state;
+        var { isChronological} = this.state
 
         return (
                 <div>
-                {this.showPosts(isChronological).map(post =>
+
+                <h3>/r/javascript Top Posts</h3>
+
+                <button onClick={ this.switchOrder }>{ isChronological ? 'Top First': 'Newest First' }</button>
+
+                { this.showPosts(isChronological).map(post =>
                      <div id="post">
                      <div id="title">{ post.data.title }</div> by <span id="author">{ post.data.author }</span>
                      <div id="url"><a href={ post.data.url }>{ post.data.url }</a></div>
-                     {post.data.created_utc}
                      </div>
-                )};
+                )}
                 </div>
         );
     }
