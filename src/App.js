@@ -9,6 +9,7 @@ class App extends Component {
 
         this.state = {
             posts: [],
+            isChronological: true,
         };
     }
 
@@ -18,17 +19,30 @@ class App extends Component {
             .then(data => this.setState({ posts: data.data.children }));
     }
 
-    render() {
+    showPosts(isChronological) {
         const { posts } = this.state;
+
+        const posts_sorted = [].concat(posts)
+              .sort((a,b) => b.data.created_utc - a.data.created_utc);
+
+        if (isChronological) {
+            return posts_sorted;
+        }
+        return posts;
+    }
+
+    render() {
+        const { isChronological } = this.state;
 
         return (
                 <div>
-                {posts.map(post =>
-                           <div id="post">
-                               <div id="title">{ post.data.title }</div> by <span id="author">{ post.data.author }</span>
-                               <div id="url"><a href={ post.data.url }>{ post.data.url }</a></div>
-                           </div>
-                          )}
+                {this.showPosts(isChronological).map(post =>
+                     <div id="post">
+                     <div id="title">{ post.data.title }</div> by <span id="author">{ post.data.author }</span>
+                     <div id="url"><a href={ post.data.url }>{ post.data.url }</a></div>
+                     {post.data.created_utc}
+                     </div>
+                )};
                 </div>
         );
     }
